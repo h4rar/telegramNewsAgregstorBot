@@ -46,36 +46,6 @@ public class ScheduledPars {
 
     @Scheduled(fixedDelayString = "${fixedRate.in.milliseconds}")
     public void refresh() {
-//        String title1 = "title";
-//        String source1 = "source";
-//        String description1 = "description";
-//        int wordsCountInDescription1 = 10;
-//        String link1 = "link";
-//        Date date1 = new Date();
-//        String content1 = "content";
-//
-//        News news = new News(title1, source1, description1, wordsCountInDescription1, link1, date1, content1);
-//        newsRepository.save(news);
-//
-//        String word = "5tgy5";
-//        Double weight = 10.3;
-//        WordWeight wordWeight = new WordWeight(word,weight);
-//        WordWeight wordWeight1 = new WordWeight(word+"1",weight+1);
-//        List<WordWeight> wordWeights = new ArrayList<>();
-//        wordWeights.add(wordWeight);
-//        wordWeights.add(wordWeight1);
-//
-//        news.setWordWeight(wordWeights);
-//        newsRepository.save(news);
-//
-//        //
-//        List<String> strings = Arrays.asList("source");
-//        List<News> list =newsRepository.findBySourceIn(strings);
-//        for (News n : list) {
-//            System.out.println(n.getWordWeight().size());
-//        }
-
-
         List<News> listNewNews = new ArrayList<>();
         List<SyndFeed> syndFeeds = new ArrayList<>();
         List<String> listURL = parserRSS.getListURL();
@@ -153,7 +123,7 @@ public class ScheduledPars {
                     listNewNews.add(news);
                 }
             }
-
+//
 //                for (SyndEntryImpl obj : res) {
 //                    title = ((!obj.getTitle().equals("")) ? obj.getTitle() : null);
 //                    String source = ((!feed.getTitle().equals("")) ? feed.getTitle() : "any");
@@ -181,11 +151,10 @@ public class ScheduledPars {
 //                    Date date = obj.getPublishedDate();
 //                    int wordsCountInDescription = description.split("\\s+").length;
 //
-//                    Map<String, Double> stringWeight = new HashMap<>();
-//                    News message = new News(title, source, description, wordsCountInDescription, link, date,stringWeight, content);
-
-//                    newsRepository.save(message);
-//                    listNewNews.add(message);
+//                    News news = new News(title, source, description, wordsCountInDescription, link, date, content);
+//
+//                    newsRepository.save(news);
+//                    listNewNews.add(news);
 //                }
 
         }
@@ -218,7 +187,7 @@ public class ScheduledPars {
         String[]tokens = tokenizer.tokenize(description);
         List<String> stopString = Arrays.asList("the","article", ",", ">", "<", "p", ".", "of","and","it","/","in","that","w","a","-","i","" +
                 "","from","to","for","for","br","\"","=","07","b","div","class","_",":","px","you","’","“","”","is","es","c","--",")","d","wintersession","" +
-                "", "в","и","по","на","с","и","«","»","а","то",";","какая","или","что","какая","г","jpg","–");
+                "", "в","и","по","на","с","и","[","]","'","«","»","а","?","то",";","какая","или","что","какая","г","jpg","–");
         for (String s : tokens) {
             if (!stopString.contains(s)){
                 thisDocuments.add(s);
