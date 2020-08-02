@@ -159,12 +159,11 @@ public class ScheduledPars {
 
         }
 
-//        //если есть отновления - сделать рассылку
-//        if (listNewNews.size() > 0) {
-//            mailingService.mailingAllClient(listNewNews);
-//        }
-
-        System.out.println("Конец");
+        //если есть отновления - сделать рассылку
+        if (listNewNews.size() > 0) {
+            mailingService.mailingAllClient(listNewNews);
+        }
+//        System.out.println("Конец");
     }
 
 
