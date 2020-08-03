@@ -129,7 +129,7 @@ public class StatisticsHandler implements InputMessageHandler {
                 countDay = "2 месяца";
             }
             else {
-                listDataGraph = getListDataGraph(sevenDayAgo, chatId);
+                listDataGraph = getListDataGraph(halfMonthAgo, chatId);
 
                 //todo
                 for (DataForLineGraph dfg : listDataGraph){
