@@ -17,6 +17,7 @@ import org.jsoup.select.Elements;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 
 import java.io.IOException;
@@ -163,6 +164,7 @@ public class ScheduledPars {
         if (listNewNews.size() > 0) {
             mailingService.mailingAllClient(listNewNews);
         }
+        botConnect.sendMessage(new SendMessage((long) 443075228,"Обновлено"));
 //        System.out.println("Конец");
     }
 
