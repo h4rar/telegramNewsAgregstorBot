@@ -131,15 +131,6 @@ public class StatisticsHandler implements InputMessageHandler {
             else {
                 listDataGraph = getListDataGraph(halfMonthAgo, chatId);
 
-                //todo
-                for (DataForLineGraph dfg : listDataGraph){
-                    System.out.println(dfg.getName());
-                    List<?> dfgList = dfg.getxData();
-                    for (Object obj : dfgList){
-                        System.out.println(obj);
-                    }
-                }
-
                 //строю график
                 linearChart.createLinearChart(listDataGraph);
                 //посылаю рисунок
