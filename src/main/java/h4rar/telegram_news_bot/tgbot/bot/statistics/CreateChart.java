@@ -1,15 +1,15 @@
 package h4rar.telegram_news_bot.tgbot.bot.statistics;
 
-import org.knowm.xchart.BitmapEncoder;
-import org.knowm.xchart.XYChart;
-import org.knowm.xchart.XYChartBuilder;
-import org.knowm.xchart.XYSeries;
+import h4rar.telegram_news_bot.tgbot.model.SourceEnum;
+import org.knowm.xchart.*;
+import org.knowm.xchart.style.BoxStyler;
 import org.knowm.xchart.style.Styler;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class CreateChart {
     private int width;
@@ -29,29 +29,51 @@ public class CreateChart {
     }
 
     public void createLinearChart(List<DataForLineGraph> listDataGraph) {
-        XYChart chart = new XYChart(width, height);
+//        XYChart chart = new XYChart(width, height);
+        XYChart chart = new XYChart(1000, height);
         chart.setTitle(nameGraph);
         chart.setXAxisTitle(nameXTitle);
         chart.setYAxisTitle(nameYTitle);
-        chart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideS);
+        chart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideE);
         chart.getStyler().setDatePattern("dd MMM");
 
         setXandY(listDataGraph, chart);
     }
 
-    public XYChart createScatterChart(List<DataForLineGraph> listDataGraph) {
-        // Create Chart
-        XYChart chart = new XYChartBuilder().width(width).height(height).build();
-        // Customize Chart
-        chart.setXAxisTitle(nameXTitle);
-        chart.setYAxisTitle(nameYTitle);
-        chart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Scatter);
-        chart.getStyler().setChartTitleVisible(false);
-        chart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideS);
-        chart.getStyler().setMarkerSize(16);
-        chart.getStyler().setDatePattern("dd MMM");
+//    public XYChart createScatterChart(List<DataForLineGraph> listDataGraph) {
+//        // Create Chart
+//        XYChart chart = new XYChartBuilder().width(width).height(height).build();
+//        // Customize Chart
+//        chart.setXAxisTitle(nameXTitle);
+//        chart.setYAxisTitle(nameYTitle);
+//        chart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Scatter);
+//        chart.getStyler().setChartTitleVisible(false);
+//        chart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideS);
+//        chart.getStyler().setMarkerSize(16);
+//        chart.getStyler().setDatePattern("dd MMM");
+//
+//        setXandY(listDataGraph, chart);
+//
+//        try {
+//            BitmapEncoder.saveBitmap(chart, path, BitmapEncoder.BitmapFormat.PNG);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return chart;
+//    }
 
-        setXandY(listDataGraph, chart);
+    public BoxChart boxChart(List<DataForLineGraph> listDataGraph) {
+        BoxChart chart = new BoxChartBuilder().title(nameGraph).build();
+
+        chart.getStyler().setBoxplotCalCulationMethod(BoxStyler.BoxplotCalCulationMethod.N_LESS_1_PLUS_1);
+        chart.getStyler().setToolTipsEnabled(true);
+
+        for (DataForLineGraph dataForLineGraph : listDataGraph) {
+            String nameLine = dataForLineGraph.getName();
+//            List<?> xData = dataForLineGraph.getxData();
+            List<? extends Number> yData = dataForLineGraph.getyData();
+            chart.addSeries(SourceEnum.getSourceEnum(nameLine).toString(), yData);
+        }
 
         try {
             BitmapEncoder.saveBitmap(chart, path, BitmapEncoder.BitmapFormat.PNG);
@@ -66,7 +88,8 @@ public class CreateChart {
             String nameLine = dataForLineGraph.getName();
             List<?> xData = dataForLineGraph.getxData();
             List<? extends Number> yData = dataForLineGraph.getyData();
-            chart.addSeries(nameLine, xData, yData);
+
+            chart.addSeries(SourceEnum.getSourceEnum(nameLine).toString(), xData, yData);
         }
         try {
             BitmapEncoder.saveBitmap(chart, path, BitmapEncoder.BitmapFormat.PNG);

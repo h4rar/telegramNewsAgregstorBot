@@ -19,8 +19,8 @@ public class ParserRSSConfig {
     public ParserRSS myParserRSS() {
         ParserRSS parserRSS = new ParserRSS();
         List<String> listURL = Arrays.asList(
-                "http://news.mit.edu/rss/research",
-                "https://news.harvard.edu/gazette/section/science-technology/feed/",
+                "http://news.mit.edu/rss/feed",
+                "https://news.harvard.edu/gazette/feed/",
                 "https://mipt.ru/rss",
                 "https://ssau.ru/rss",
                 "https://www.msu.ru/news/rss/"

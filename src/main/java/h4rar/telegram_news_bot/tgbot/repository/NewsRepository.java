@@ -19,6 +19,8 @@ public interface NewsRepository extends CrudRepository<News, Integer> {
 
     @Query(value = "select count(*), source from News group by source", nativeQuery = true)
     List<InfoAboutCountNews> getInfoAboutCountNews();
+    @Query(value = "select count(*), source from News where date > ?1 group by source order by count DESC", nativeQuery = true)
+    List<InfoAboutCountNews> getInfoAboutCountNewsForDate(Date date);
 
     @Query(value = "select t1.to_date, t1.source, t1.avg from (select max(id), max(description), max(link), max(title), avg(words_count_in_description), source, to_date(cast(date as TEXT), 'YYYY.MM.DD') from news group by to_date(cast(date as TEXT), 'YYYY.MM.DD'),source order by source, to_date(cast(date as TEXT), 'YYYY.MM.DD')) as t1 where to_date > ?1", nativeQuery = true)
     List<InfoAboutCountWords> getInfoAboutCountWords(Date date);

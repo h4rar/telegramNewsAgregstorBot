@@ -74,7 +74,7 @@ public class ScheduledPars {
                     List<List<String>> allDescriptionList;
                     if(obj.getContents().size()>0){//TODO тут неявная логика получается
                         content=obj.getContents().get(0).toString().toLowerCase();
-                        sources = Arrays.asList("Science & Technology – Harvard Gazette", "MIT Research News");
+                        sources = Arrays.asList("Harvard Gazette", "MIT News");
                         allDescriptionList = getContentList(sources);
                     }
                     else {
@@ -96,7 +96,18 @@ public class ScheduledPars {
                     List<String> descriptionList = getThisDescriptionList(content);
                     allDescriptionList.add(descriptionList);
 
-                    Date date = obj.getPublishedDate();
+                    Date dateSource = obj.getPublishedDate();
+                    Date date;
+                    if (source.equals("Новости и события МФТИ")||source.equals("Новости МГУ")){
+                        date = new Date(dateSource.getTime() + (-4+3)  * 3600000);
+                    }
+                    else if(source.equals("НОВОСТИ САМАРСКОГО УНИВЕРСИТЕТА")||source.equals("Harvard Gazette")){
+                        date = new Date(dateSource.getTime() - 7 * 3600000);
+                    }
+                    else {
+                        date = new Date(dateSource.getTime() + (- 11 +4) * 3600000);
+                    }
+
                     int wordsCountInDescription = description.split("\\s+").length;
 
                     Map<String, Double> stringWeight = new HashMap<>();
@@ -124,7 +135,7 @@ public class ScheduledPars {
                     listNewNews.add(news);
                 }
             }
-//
+
 //                for (SyndEntryImpl obj : res) {
 //                    title = ((!obj.getTitle().equals("")) ? obj.getTitle() : null);
 //                    String source = ((!feed.getTitle().equals("")) ? feed.getTitle() : "any");
@@ -149,23 +160,32 @@ public class ScheduledPars {
 //                        content = elements.text().toLowerCase();
 //                    }
 //
-//                    Date date = obj.getPublishedDate();
-//                    int wordsCountInDescription = description.split("\\s+").length;
+//                    Date dateSource = obj.getPublishedDate();
+//                    Date date;
+//                    if (source.equals("Новости и события МФТИ")||source.equals("Новости МГУ")){
+//                        date = new Date(dateSource.getTime() + (-4+3)  * 3600000);
+//                    }
+//                    else if(source.equals("НОВОСТИ САМАРСКОГО УНИВЕРСИТЕТА")||source.equals("Harvard Gazette")){
+//                        date = new Date(dateSource.getTime() - 7 * 3600000);
+//                    }
+//                    else {
+//                        date = new Date(dateSource.getTime() + (- 11 +4) * 3600000);
+//                    }
 //
+//                    int wordsCountInDescription = description.split("\\s+").length;
 //                    News news = new News(title, source, description, wordsCountInDescription, link, date, content);
 //
 //                    newsRepository.save(news);
 //                    listNewNews.add(news);
 //                }
-
         }
 
-        //если есть отновления - сделать рассылку
-        if (listNewNews.size() > 0) {
-            mailingService.mailingAllClient(listNewNews);
-        }
-        botConnect.sendMessage(new SendMessage((long) 443075228,"Обновлено"));
-//        System.out.println("Конец");
+//        //если есть отновления - сделать рассылку
+//        if (listNewNews.size() > 0) {
+//            mailingService.mailingAllClient(listNewNews);
+//        }
+//        botConnect.sendMessage(new SendMessage((long) 443075228,"Обновлено"));
+        System.out.println("Конец");
     }
 
 
@@ -188,7 +208,7 @@ public class ScheduledPars {
         String[]tokens = tokenizer.tokenize(description);
         List<String> stopString = Arrays.asList("the","article", ",", ">", "<", "p", ".", "of","and","it","/","in","that","w","a","-","i","" +
                 "","from","to","for","for","br","\"","=","07","b","div","class","_",":","px","you","’","“","”","is","es","c","--",")","d","wintersession","" +
-                "", "в","и","по","на","с","и","[","]","'","«","»","а","?","то",";","какая","или","что","какая","г","jpg","–");
+                "", "в","и","по","на","с","и","[","]","'","«","»","а","?","%","span","li","+","то",";","какая","или","что","какая","г","jpg","–");
         for (String s : tokens) {
             if (!stopString.contains(s)){
                 thisDocuments.add(s);

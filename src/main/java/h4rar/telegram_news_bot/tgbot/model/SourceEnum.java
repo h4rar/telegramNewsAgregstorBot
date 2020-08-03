@@ -3,12 +3,12 @@ package h4rar.telegram_news_bot.tgbot.model;
 public enum SourceEnum {
     MIT{
         public String getName(){
-            return "MIT Research News";
+            return "MIT News";
         }
     },
     Harvard{
         public String getName(){
-            return "Science & Technology – Harvard Gazette";
+            return "Harvard Gazette";
         }
     },
     MIPT{
@@ -16,7 +16,7 @@ public enum SourceEnum {
             return "Новости и события МФТИ";
         }
     },
-    SamaraUniversity{
+    Samara{
         public String getName(){
             return "НОВОСТИ САМАРСКОГО УНИВЕРСИТЕТА";
         }
@@ -32,17 +32,17 @@ public enum SourceEnum {
 
     public static SourceEnum getSourceEnum(String source){
         SourceEnum sourceEnum = null;
-        if(source.equals("MIT Research News")){
+        if(source.equals("MIT News")){
             sourceEnum = SourceEnum.MIT;
         }
-        else if(source.equals("Science & Technology – Harvard Gazette")){
+        else if(source.equals("Harvard Gazette")){
             sourceEnum = SourceEnum.Harvard;
         }
         else if(source.equals("Новости и события МФТИ")){
             sourceEnum = SourceEnum.MIPT;
         }
         else if(source.equals("НОВОСТИ САМАРСКОГО УНИВЕРСИТЕТА")){
-            sourceEnum = SourceEnum.SamaraUniversity;
+            sourceEnum = SourceEnum.Samara;
         }
         else if(source.equals("Новости МГУ")){
             sourceEnum = SourceEnum.MSU;

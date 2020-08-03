@@ -62,6 +62,7 @@ public class StatisticsHandler implements InputMessageHandler {
         int height = 600;
         Date dateNow = new Date();
         Date sevenDayAgo = new Date(dateNow.getTime() - 7 * 86400000);
+        Date d20DayAgo = new Date(dateNow.getTime() - 20 * 86400000);
         Date halfMonthAgo = new Date(dateNow.getTime() - 15 * 86400000);
         Date oneMonthAgo = new Date(halfMonthAgo.getTime() - 15 * 86400000);
         Date twoAndAHalfMonthAgo = new Date(oneMonthAgo.getTime() - 15 * 86400000);
@@ -79,7 +80,7 @@ public class StatisticsHandler implements InputMessageHandler {
             }
             if (update.getMessage().getText().equals("Топ тегов")) {
                 List<String> sourcesRu = Arrays.asList("Новости и события МФТИ", "НОВОСТИ САМАРСКОГО УНИВЕРСИТЕТА", "Новости МГУ");
-                List<String> sourcesEn = Arrays.asList("MIT Research News", "Science & Technology – Harvard Gazette");
+                List<String> sourcesEn = Arrays.asList("MIT News", "Harvard Gazette");
 
                 String messageRu = getMessageTop5Tags(halfMonthAgo, sourcesRu);
                 String messageEn = getMessageTop5Tags(halfMonthAgo, sourcesEn);
@@ -95,12 +96,11 @@ public class StatisticsHandler implements InputMessageHandler {
             }
             if (update.getMessage().getText().equals("Количество новостей")) {
                 String name = "Количество новостей";
-
-                List<InfoAboutCountNews> infoAboutCountNewsForThisClient = getListInfoAboutCountNewsForThisClient(chatId);
+                List<InfoAboutCountNews> infoAboutCountNewsForThisClient = getListInfoAboutCountNewsForThisClient(sevenDayAgo, chatId);
                 PieChartPercent pieChartPercent = new PieChartPercent(name, width, height, infoAboutCountNewsForThisClient);
                 pieChartPercent.createChart(path);
                 try {
-                    botConnect.sendPhoto(chatId, name, path);
+                    botConnect.sendPhoto(chatId, name + " за неделю", path);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -109,14 +109,14 @@ public class StatisticsHandler implements InputMessageHandler {
             statisticsMenu.getMainMenuMessage(chatId, "reply.statistics");
         } else if (botState.equals(BotState.WORDS_COUNT_IN_DESCRIPTION)) {
             if (update.getMessage().getText().equals("Назад")) {
-                statisticsMenu.getMainMenuMessage(chatId, "reply.statistics");
+                statisticsMenu.getMainMenuMessage(chatId, "reply.statisticsBack");
                 botState = BotState.STATISTICS;
                 client.setBotState(botState);
                 clientRepository.save(client);
                 return;
             }
 
-            String nameGraph = "Среднее за день количество слов в описании новости";
+            String nameGraph = "Количество слов в описании новости";
             CreateChart linearChart = new CreateChart(width, height, path, nameGraph, "Дата", "Количество слов");
             List<DataForLineGraph> listDataGraph = null;
             String countDay = "";
@@ -129,7 +129,17 @@ public class StatisticsHandler implements InputMessageHandler {
                 countDay = "2 месяца";
             }
             else {
-                listDataGraph = getListDataGraph(halfMonthAgo, chatId);
+                listDataGraph = getListDataGraph(sevenDayAgo, chatId);
+
+                //todo
+                for (DataForLineGraph dfg : listDataGraph){
+                    System.out.println(dfg.getName());
+                    List<?> dfgList = dfg.getxData();
+                    for (Object obj : dfgList){
+                        System.out.println(obj);
+                    }
+                }
+
                 //строю график
                 linearChart.createLinearChart(listDataGraph);
                 //посылаю рисунок
@@ -152,7 +162,7 @@ public class StatisticsHandler implements InputMessageHandler {
 
         } else if (botState.equals(BotState.TIME_POSTING)) {
             if (update.getMessage().getText().equals("Назад")) {
-                statisticsMenu.getMainMenuMessage(chatId, "reply.statistics");
+                statisticsMenu.getMainMenuMessage(chatId, "reply.statisticsBack");
                 botState = BotState.STATISTICS;
                 client.setBotState(botState);
                 clientRepository.save(client);
@@ -173,7 +183,7 @@ public class StatisticsHandler implements InputMessageHandler {
             else {
                 listDataGraph = getListDataScatterChart(halfMonthAgo, chatId);
                 //строю график
-                linearChart.createScatterChart(listDataGraph);
+                linearChart.boxChart(listDataGraph);
                 //посылаю рисунок
                 try {
                     botConnect.sendPhoto(chatId, "Распределение новостей по времени", path);
@@ -184,7 +194,7 @@ public class StatisticsHandler implements InputMessageHandler {
                 return;
             }
             //строю график
-            linearChart.createScatterChart(listDataGraph);
+            linearChart.boxChart(listDataGraph);
             //посылаю рисунок
             try {
                 botConnect.sendPhoto(chatId, "Распределение новостей по времени за "+countDay, path);
@@ -243,9 +253,9 @@ public class StatisticsHandler implements InputMessageHandler {
         return listDataGraph;
     }
 
-    public List<InfoAboutCountNews> getListInfoAboutCountNewsForThisClient(long chatId) {
+    public List<InfoAboutCountNews> getListInfoAboutCountNewsForThisClient(Date date, long chatId) {
         List<String> clientSourceName = ClientSourceService.getClientSourceName(clientRepository, chatId);
-        List<InfoAboutCountNews> infoAboutCountNews = newsRepository.getInfoAboutCountNews();
+        List<InfoAboutCountNews> infoAboutCountNews = newsRepository.getInfoAboutCountNewsForDate(date);
         List<InfoAboutCountNews> infoAboutCountNewsForThisClient = new ArrayList<>();
         for (InfoAboutCountNews i : infoAboutCountNews) {
             if (clientSourceName.contains(i.getSource())) {
