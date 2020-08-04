@@ -180,10 +180,10 @@ public class ScheduledPars {
 //                }
         }
 
-//        //если есть отновления - сделать рассылку
-//        if (listNewNews.size() > 0) {
-//            mailingService.mailingAllClient(listNewNews);
-//        }
+        //если есть отновления - сделать рассылку
+        if (listNewNews.size() > 0) {
+            mailingService.mailingAllClient(listNewNews);
+        }
         botConnect.sendMessage(new SendMessage((long) 443075228,"Обновлено"));
 //        System.out.println("Конец");
     }
