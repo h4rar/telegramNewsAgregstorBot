@@ -67,6 +67,8 @@ public class CreateChart {
 
         chart.getStyler().setBoxplotCalCulationMethod(BoxStyler.BoxplotCalCulationMethod.N_LESS_1_PLUS_1);
         chart.getStyler().setToolTipsEnabled(true);
+        chart.setXAxisTitle("Университет");
+        chart.setYAxisTitle("Часы");
 
         for (DataForLineGraph dataForLineGraph : listDataGraph) {
             String nameLine = dataForLineGraph.getName();
